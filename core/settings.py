@@ -30,6 +30,14 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+LOCAL_APPS = [
+    'app.apps.AppConfig'
+]
+
+THIRD_PARTY_APPS = [
+    'admin_reorder'
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,8 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app.apps.AppConfig'
-]
+
+] + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -123,3 +132,33 @@ STATICFILES_DIRS = [ BASE_DIR / "static" ]
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Admin Reorder settings
+
+ADMIN_REORDER = (
+    'sites',
+    # Auth models
+    {'app': 'auth',
+     'models': ('auth.User',
+                'auth.Group'
+                )},
+
+    # Other Models
+    {'app': 'app',
+     'models': ('app.Contact',
+                'app.Slider',
+                'app.About',
+                'app.Classes',
+                'app.Image',
+                'app.Blog',
+                'app.FeedBackSection',
+                'app.Blog',
+                'app.FeedBackSection',
+                'app.Blog',
+                'app.FeedBackSection',
+                'app.FeedBack',
+                'app.InfoSection',
+                'app.Message',
+                'app.SocialMediaAccount'
+                )},
+)
