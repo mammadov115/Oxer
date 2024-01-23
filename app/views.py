@@ -10,7 +10,6 @@ def home(request):
         if form.is_valid():
             form.save()
 
-    contact_info = Contact.objects.first()
     slider = Slider.objects.all()
     about = About.objects.first()
     class_section = Classes.objects.first()
@@ -21,7 +20,7 @@ def home(request):
     feedbacks = FeedBack.objects.all()
     info_section = InfoSection.objects.first()
     form = MessageForm()
-    sm_list = [x for x in SocialMediaAccount]
-    social_media_platforms = {key:value for key,value in sm_list.items()}
+    sm_list = [x for x in SocialMediaAccount.objects.all()]
+    social_media_platforms = {x.platform:x.link for x in sm_list}
    
     return render(request, "index.html", locals())
