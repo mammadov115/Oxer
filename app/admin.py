@@ -38,8 +38,14 @@ class ImagesInline(admin.StackedInline):
 class ClassesAdmin(admin.ModelAdmin):
     inlines = [ImagesInline]
 
+    def has_add_permission(self, request):
+        is_empty = Classes.objects.count() == 0
+        return True if is_empty else False
+
     
-admin.site.register(Blog)
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ["title", "created_at", "show_at_home"]
 
 
 @admin.register(FeedBackSection)

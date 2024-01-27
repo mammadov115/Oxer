@@ -15,7 +15,7 @@ def home(request):
     class_section = Classes.objects.first()
     class_images = Image.objects.all()
     blog_section = BlogsSection.objects.first()
-    blogs = Blog.objects.all()
+    blogs = Blog.objects.filter(show_at_home=True)
     feedback_section = FeedBackSection.objects.first()
     feedbacks = FeedBack.objects.all()
     info_section = InfoSection.objects.first()

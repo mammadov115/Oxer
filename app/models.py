@@ -59,13 +59,28 @@ class BlogsSection(models.Model):
 
 
 class Blog(models.Model):
+    class Meta:
+        ordering = ["-created_at"]
+
     image = models.ImageField(upload_to='blog_images/%Y/%B/%d', null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, null=True, blank=True)
     title = models.CharField(max_length=250, null=True, blank=True)
     text = models.TextField()
+    show_at_home = models.BooleanField()
 
     def __str__(self):
         return self.title
+    
+    def clean(self) :
+        if not self.pk and Blog.objects.filter(show_at_home=True).count() >= 2:
+                raise ValidationError("Only two blogs can be set to show on the home page.")
+        if self.pk:
+            if self.show_at_home:
+                ...
+                 
+        return super().clean()  
+
+    
 
 
 class FeedBackSection(models.Model):
