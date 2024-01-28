@@ -66,7 +66,11 @@ class InfoSectionAdmin(admin.ModelAdmin):
         is_empty = InfoSection.objects.count() == 0
         return True if is_empty else False
 
-admin.site.register(Message)
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ["name", "created_at"]
+    readonly_fields = ["created_at"]
+
 admin.site.register(SocialMediaAccount)
 
 @admin.register(BlogsSection)

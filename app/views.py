@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 from .forms import MessageForm
 # Create your views here.
@@ -7,8 +7,11 @@ from .forms import MessageForm
 def home(request):
     if request.method == "POST":
         form = MessageForm(request.POST)
+        print(request.POST)
         if form.is_valid():
             form.save()
+            return redirect("contact-section")
+
 
     slider = Slider.objects.all()
     about = About.objects.first()

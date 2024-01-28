@@ -8,22 +8,23 @@
 
             <!-- contact section -->
 
-            <section class="contact_section">
+            <section class="contact_section" id="contact">
               <h2>
                 Request A Call Back
               </h2>
-              <form action="">
+              <form method="post">
+                {% csrf_token %}
                 <div>
-                  <input type="text" placeholder="Name" />
+                  {{ form.name }}
                 </div>
                 <div>
-                  <input type="text" placeholder="Phone Number" />
+                  {{ form.number }}
                 </div>
                 <div>
-                  <input type="email" placeholder="Email" />
+                  {{ form.email }}
                 </div>
                 <div>
-                  <input type="text" class="message-box" placeholder="Message" />
+                  {{ form.message }}
                 </div>
                 <div class="d-flex ">
                   <button>

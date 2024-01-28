@@ -74,9 +74,6 @@ class Blog(models.Model):
     def clean(self) :
         if not self.pk and Blog.objects.filter(show_at_home=True).count() >= 2:
                 raise ValidationError("Only two blogs can be set to show on the home page.")
-        if self.pk:
-            if self.show_at_home:
-                ...
                  
         return super().clean()  
 
@@ -100,6 +97,7 @@ class FeedBack(models.Model):
 
     class Meta:
         verbose_name_plural= "Feedbacks"
+        verbose_name= "Feedback"
 
     def __str__(self):
         return self.name
@@ -130,6 +128,7 @@ class Message(models.Model):
     number = models.CharField(max_length=250, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     message = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField("Sending Date", auto_now_add=True)
 
     def __str__(self):
         return self.name
