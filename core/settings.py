@@ -36,7 +36,8 @@ LOCAL_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'admin_reorder'
+    'admin_reorder',
+    'rest_framework'
 ]
 
 INSTALLED_APPS = [

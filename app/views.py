@@ -11,7 +11,7 @@ def home(request):
         if form.is_valid():
             form.save()
             return redirect("contact-section")
-
+ 
 
     slider = Slider.objects.all()
     about = About.objects.first()
@@ -25,5 +25,14 @@ def home(request):
     form = MessageForm()
     sm_list = [x for x in SocialMediaAccount.objects.all()]
     social_media_platforms = {x.platform:x.link for x in sm_list}
-   
-    return render(request, "index.html", locals())
+#    for api development index.html converted to api/index.html
+    return render(request, "api/index.html", locals())
+
+def about(request):
+    return render(request, "api/about.html")
+
+def classes(request):
+    return render(request, "api/class.html")
+
+def blog(request):
+    return render(request, "api/blog.html")
