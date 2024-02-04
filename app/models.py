@@ -58,14 +58,14 @@ class BlogsSection(models.Model):
 
 
 class Blog(models.Model):
-    class Meta:
-        ordering = ["-created_at"]
-
     image = models.ImageField(upload_to='blog_images/%Y/%B/%d', null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, null=True, blank=True)
     title = models.CharField(max_length=250, null=True, blank=True)
     text = models.TextField()
     show_at_home = models.BooleanField()
+
+    class Meta:
+        ordering = ["-created_at"]
 
     def __str__(self):
         return self.title
@@ -75,8 +75,6 @@ class Blog(models.Model):
                 raise ValidationError("Only two blogs can be set to show on the home page.")
                  
         return super().clean()  
-
-    
 
 
 class FeedBackSection(models.Model):
@@ -102,7 +100,6 @@ class FeedBack(models.Model):
         return self.name
     
 
-
 class InfoSection(models.Model):
     image = models.ImageField(upload_to="info_section/%Y/%B/%d", null=True, blank=True)
     google_map_embed_link = models.TextField(null=True, blank=True)
@@ -119,7 +116,6 @@ class InfoSection(models.Model):
         if match:
             self.google_map_embed_link = match.group(1)
         super().save(*args, **kwargs)
-
 
 
 class Message(models.Model):
