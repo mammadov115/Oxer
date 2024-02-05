@@ -4,7 +4,7 @@ from .serializers import *
 
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics, mixins
+from rest_framework import status, generics, mixins, viewsets
 
 # Create your views here.
 
@@ -243,6 +243,7 @@ class ImageListCreateView(generics.GenericAPIView, mixins.ListModelMixin, mixins
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+
 class ImageRetrieveUpdateDeleteView(generics.GenericAPIView,
                                      mixins.RetrieveModelMixin,
                                        mixins.UpdateModelMixin,
@@ -289,6 +290,129 @@ class BlogsSectionListCreateUpdateDeleteView(generics.GenericAPIView,
         return Response(data={"message": "Successfully deleted"}, status=status.HTTP_200_OK)
 
 
+class BlogListCreateView(generics.GenericAPIView, 
+                          mixins.ListModelMixin, 
+                           mixins.CreateModelMixin):
+    
+    serializer_class = BlogSerializer
+    queryset = Blog.objects.all()
 
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+class BlogRetrieveUpdateDeleteView(generics.GenericAPIView, 
+                                    mixins.RetrieveModelMixin,
+                                     mixins.UpdateModelMixin,
+                                      mixins.DestroyModelMixin):
+
+    serializer_class = BlogSerializer
+    queryset = Blog.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+
+class FeedBackSectionViewSet(viewsets.ViewSet):
+
+    def list(self, request):
+        queryset = FeedBackSection.objects.all()
+        serializer = FeedBackSectionSerializer(instance=queryset, many=True)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        data = request.data
+        serializer = FeedBackSectionSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request):
+        instance = FeedBackSection.objects.first()
+        data = request.data
+        serializer = FeedBackSectionSerializer(instance=instance, data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        FeedBackSection.objects.all().delete()
+
+        return Response(data={"message": "All deleted."}, status=status.HTTP_404_NOT_FOUND)
+        
+        
+class FeedBackViewSet(viewsets.ModelViewSet):
+    queryset = FeedBack.objects.all()
+    serializer_class = FeedBackSerializer
+
+
+class InfoSectionViewSet(viewsets.ViewSet):
+
+    def list(self, request):
+        instance = InfoSection.objects.first()
+        serializer = InfoSectionSerializer(instance=instance)
+        if instance:
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=instance, status=status.HTTP_200_OK)
         
     
+    def create(self, request):
+        instance = InfoSection.objects.first()
+        if not instance:
+            data = request.data
+            serializer = InfoSectionSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data={"message": "Info Section  cureently available."}, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        instance = InfoSection.objects.first()
+        data = request.data
+        serializer = InfoSectionSerializer(instance=instance, data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        InfoSection.objects.all().delete()
+
+        return Response(data={"message": "All deleted"}, status=status.HTTP_200_OK)
+            
+
+class MessageViewSet(viewsets.ModelViewSet):
+
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+        
+
+class SocialMediaAccountViewSet(viewsets.ModelViewSet):
+    queryset = SocialMediaAccount.objects.all()
+    serializer_class = SocialMediaAccountSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        
+        response = {
+            "error": serializer.errors,
+            "message": f'Valid Choices: {[p.value for p in SocialMediaAccount.Platforms]}' 
+        }
+
+        return Response(data=response, status=status.HTTP_400_BAD_REQUEST)
